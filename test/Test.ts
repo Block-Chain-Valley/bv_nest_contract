@@ -24,6 +24,20 @@ describe("Farm", () => {
     const birdInfo = await nest.retrieveBirdInfo()
     assert(birdInfo[1] === "Birdie")
   })
+  it("Reverts when two birds created", async () => {
+    const tx = await nest.createBird("Birdie", {
+      value: utils.parseEther("0.01"),
+    })
+    const txr = await tx.wait()
+
+    const birdInfo = await nest.retrieveBirdInfo()
+
+    await expect(
+      nest.createBird("Birdie", {
+        value: utils.parseEther("0.01"),
+      })
+    ).to.be.revertedWith("Nest: MAX ONE BIRD")
+  })
   it("Successfully creates grass", async () => {
     const tx = await nest.createPlant(0)
     const txr = await tx.wait()
