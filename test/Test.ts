@@ -15,10 +15,6 @@ describe("Farm", () => {
     nest = await nestFactory.deploy()
     await nest.deployed()
   })
-  it("Retrieves values", async () => {
-    const birdInfo = await nest.retrieveBirdInfo()
-    const plantInfo = await nest.retrievePlantInfo()
-  })
   it("Successfully creates bird", async () => {
     const tx = await nest.createBird("Birdie", {
       value: utils.parseEther("0.01"),
@@ -63,13 +59,21 @@ describe("Farm", () => {
 
     const newPlantInfo = await nest.retrievePlantInfo()
     assert(Number(newPlantInfo[1]) > 0)
+    // expect(Number(newPlantInfo[1])).to.be.greaterThan(0)
   })
   it("Successfully levels up", async () => {
     const birdInfo = await nest.retrieveBirdInfo()
     await nest.levelUp(birdInfo[0])
     const newBirdInfo = await nest.retrieveBirdInfo()
-    console.log(birdInfo[4])
-    console.log(newBirdInfo[4])
     expect(Number(newBirdInfo[3]) > Number(birdInfo[3]))
   })
+  it("Successfully emits event", async () => {
+    // uint _id, string memory _name, uint _ad, uint _exp, uint _level, uint _length, uint _class
+    // (uint _id, uint _hp, uint _expReward, uint _deadTime, uint _class)
+    const birdInfo = await nest.retrieveBirdInfo()
+    const plantInfo = await nest.retrievePlantInfo()
+    await expect(nest.feedPlant(birdInfo[0], plantInfo[0])).to.emit(nest, "PlantFed")
+  })
 })
+
+// grep = global search for regular expression and print out

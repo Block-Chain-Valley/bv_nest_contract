@@ -1,6 +1,7 @@
 import { HardhatUserConfig } from "hardhat/config"
 import "@nomicfoundation/hardhat-toolbox"
 import dotenv from "dotenv"
+import "hardhat-gas-reporter"
 
 dotenv.config()
 
@@ -13,6 +14,16 @@ const config: HardhatUserConfig = {
       url: "https://klaytn-baobab.blockpi.network/v1/rpc/public",
       accounts: [SH_ACCOUNT],
     },
+  },
+  etherscan: {
+    apiKey: process.env.ETHERSCAN_API_KEY,
+  },
+  gasReporter: {
+    enabled: true,
+    outputFile: "gas-report.txt",
+    noColors: true,
+    currency: "USD",
+    coinmarketcap: process.env.COINMARKETCAP_API_KEY,
   },
 }
 

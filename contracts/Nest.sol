@@ -4,6 +4,12 @@ pragma solidity ^0.8.0;
 import "hardhat/console.sol";
 
 contract Nest {
+    event BirdCreated(uint indexed _birdId, string _name, uint _ad, uint _exp, uint _level, uint _class);
+    event PlantCreated(uint indexed _plantId, uint _hp, uint _expReward, uint _deadTime, uint _class);
+    event PlantFed(uint indexed _birdId, uint _plantId, uint _hp, uint _expReward, uint _deadTime);
+    event PlantRevived(uint indexed _plantId, uint _hp, uint _expReward, uint _deadTime);
+    event BirdLevelUp(uint indexed _birdId, uint _level, uint _exp);
+
     enum BirdClass {
         Eagle,
         Pigeon,
@@ -61,6 +67,8 @@ contract Nest {
         birdIdsOf[msg.sender].push(birdId);
         birds[birdId] = bird;
         birdId++;
+
+        emit BirdCreated(bird.id, bird.name, bird.ad, bird.exp, bird.level, uint(bird.class));
     }
 
     function createPlant(uint _plantClass) public {
@@ -70,6 +78,8 @@ contract Nest {
         uint startTime = block.timestamp;
         Plant memory plant = Plant(plantId, hp, expReward, startTime, PlantClass(_plantClass));
         plants.push(plant);
+
+        emit PlantCreated(plant.id, plant.hp, plant.expReward, plant.deadTime, uint(plant.class));
     }
 
     function feedPlant(uint _birdId, uint _plantId) public {
@@ -88,6 +98,8 @@ contract Nest {
 
         bird.exp += plant.expReward;
         plants[_plantId] = plant;
+
+        emit PlantFed(bird.id, plant.id, plant.hp, plant.expReward, plant.deadTime);
     }
 
     function revivePlant(uint _plantId) public {
@@ -98,6 +110,8 @@ contract Nest {
         (uint hpStart, uint hpRange, , ) = deClassPlant(PlantClass.Grass);
         Plant storage plant = plants[_plantId];
         plant.hp = random(hpStart, hpRange);
+
+        emit PlantRevived(plant.id, plant.hp, plant.expReward, plant.deadTime);
     }
 
     function deClassBird(BirdClass _birdClass) internal pure returns (uint _start, uint _range) {
@@ -138,6 +152,8 @@ contract Nest {
             bird.level = level + 1;
             bird.exp = exp - expRequired;
         }
+
+        emit BirdLevelUp(bird.id, bird.exp, bird.level);
     }
 
     function retrieveBirdInfo()
