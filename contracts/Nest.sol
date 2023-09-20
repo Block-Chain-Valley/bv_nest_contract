@@ -1,8 +1,6 @@
 //SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "hardhat/console.sol";
-
 contract Nest {
     event BirdCreated(uint indexed _birdId, string _name, uint _ad, uint _exp, uint _level, uint _class);
     event PlantCreated(uint indexed _plantId, uint _hp, uint _expReward, uint _deadTime, uint _class);
