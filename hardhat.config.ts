@@ -14,6 +14,11 @@ const config: HardhatUserConfig = {
       url: "https://klaytn-baobab.blockpi.network/v1/rpc/public",
       accounts: [SH_ACCOUNT],
     },
+    // sepolia
+    sepolia: {
+      url: "https://eth-sepolia.g.alchemy.com/v2/ZLAQxGyKAAmBOXf5nr8dTdsTjU-vX4Xm",
+      accounts: [SH_ACCOUNT],
+    },
   },
   etherscan: {
     apiKey: process.env.ETHERSCAN_API_KEY,
